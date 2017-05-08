@@ -54,6 +54,7 @@ namespace GameXO
             if (resField == 9)
             {
                 gameStatus = "НИЧЬЯ!";
+                foreach (Button btn in gameFieldButtons) btn.IsEnabled = false;
                 return true;
             }
             return false;

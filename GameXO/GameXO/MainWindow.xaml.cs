@@ -23,6 +23,7 @@ namespace GameXO
         Button[,] gameFieldButtons;
         AILogic aiPlayer;
         GameLogic gameLogic;
+        string playerFigure;
 
         public GameWindow()
         {
@@ -30,6 +31,7 @@ namespace GameXO
             gameFieldButtons = new Button[,] { { but00, but01, but02 }, { but10, but11, but12 }, { but20, but21, but22 } };
             aiPlayer = new AILogic();
             gameLogic = new GameLogic();
+            playerFigure = "O";
         }
 
 
@@ -73,13 +75,15 @@ namespace GameXO
             Button btnClicked = (Button)sender;
             if (btnClicked.Content.ToString() == "")
             {
-                btnClicked.Content = "O";
+                btnClicked.Content = playerFigure;
                 if (gameLogic.CheckResult(gameFieldButtons)) textBoxGameStatus.Text = gameLogic.GameStatus;
-                else
+                else if (chBoxAIPlayerON.IsChecked == true)
                 {
                     aiPlayer.AIMove(gameFieldButtons);
                     if (gameLogic.CheckResult(gameFieldButtons)) textBoxGameStatus.Text = gameLogic.GameStatus;
                 }
+                else if (playerFigure == "O") playerFigure = "X";
+                else playerFigure = "O";
             }
         }
         
