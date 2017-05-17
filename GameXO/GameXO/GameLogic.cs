@@ -13,6 +13,7 @@ namespace GameXO
         private string aiFigure;
         private readonly IView _view;
         private AILogic _aiLogic;
+        private bool aiPlayerOn;
 
         public GameLogic(IView view)
         {
@@ -29,7 +30,14 @@ namespace GameXO
         /// </summary>
         private void View_GameFieldClick(object sender, EventArgs e)
         {
-            NextMove();
+            try
+            {
+                NextMove();
+            }
+            catch (Exception ex)
+            {
+                _view.SetGameStatus(ex.Message);
+            }
         }
 
         /// <summary>
@@ -39,6 +47,7 @@ namespace GameXO
         {
             _view.SetFieldEnable(true); // делаем достыпным игровое поле
             SetGameFieldEmpty(); // очищаем игровое поле
+            aiPlayerOn = _view.AIPlayerOn; // проверяем выбрана ли игра с компьютером
 
             // выставляем фигуры игроку и компьютеру
             if (_view.PlayerFigureX)
@@ -51,6 +60,7 @@ namespace GameXO
                 playerFigure = "O";
                 aiFigure = "X";
             }
+
 
             // проверяем ходит ли компьютер первый и выбрана ли игра с компьютером
             if (!(_view.PlayerMoveFirst) && (_view.AIPlayerOn))
@@ -74,7 +84,7 @@ namespace GameXO
                     _view.SetGameStatus(gameStatus);
                     _view.SetFieldEnable(false);
                 }
-                else if (_view.AIPlayerOn)
+                else if (aiPlayerOn)
                 {
                     _aiLogic.AIMove(ref field, aiFigure);
                     if (CheckResult(field))
