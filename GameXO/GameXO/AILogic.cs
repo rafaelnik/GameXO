@@ -1,34 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-
-namespace GameXO
+﻿namespace GameXO
 {
+
     public class AILogic
     {
 
         /// <summary>
         /// Ход компьютера
         /// </summary>
-        /// <param name="gameFieldButtons">Двумерный массив кнопок игрового поля</param>
+        /// <param name="gameField">Двумерный массив игрового поля</param>
         /// <param name="AIfigure">Фигура которой ходит компьютер</param>
-        public void AIMove(Button [,] gameFieldButtons, string AIFigure = "X")
+        public void AIMove(ref string [,] gameField, string AIFigure = "X")
         {
-            if (CheckFirstMove(gameFieldButtons, AIFigure)) return;
-            else if (CheckWinNextMove(gameFieldButtons, AIFigure)) return;
-            else if (CheckLoseNextMove(gameFieldButtons, AIFigure)) return;
+            if (CheckFirstMove(gameField, AIFigure)) return;
+            else if (CheckWinNextMove(gameField, AIFigure)) return;
+            else if (CheckLoseNextMove(gameField, AIFigure)) return;
             else
             {
                 // рандомный ход в случае невозможности выиграть/проиграть следующим ходом
-                foreach (Button btn in gameFieldButtons)
+                for (int row = 0; row <= 2; row++)
                 {
-                    if (btn.Content.ToString() == "")
+                    for (int col = 0; col <= 2; col++)
                     {
-                        btn.Content = AIFigure;
-                        return;
+                        if (gameField[row, col] == "")
+                        {
+                            gameField[row, col] = AIFigure;
+                            return;
+                        }
                     }
                 }
             }
@@ -36,18 +33,18 @@ namespace GameXO
         /// <summary>
         /// Проверка возможности сделать первый ход
         /// </summary>
-        /// <param name="gameFieldButtons">Двумерный массив кнопок игрового поля</param>
+        /// <param name="gameField">Двумерный массив игрового поля</param>
         /// <param name="AIfigure">Фигура которой ходит компьютер</param>
-        private bool CheckFirstMove(Button[,] gameFieldButtons, string AIFigure)
+        private bool CheckFirstMove(string[,] gameField, string AIFigure)
         {
             string statusField = "";
             string statusCheckString = AIFigure + AIFigure; // формируем строку для проверки выгрыша AI следующим ходом
 
             // проверяем поле на возможность первого хода
-            foreach (Button btn in gameFieldButtons) statusField += btn.Content.ToString();
+            foreach (string cell in gameField) statusField += cell;
             if (statusField == "")
             {
-                gameFieldButtons[1, 1].Content = AIFigure; // делаем первый ход
+                gameField[1, 1] = AIFigure; // делаем первый ход
                 return true;
             }
             return false;
@@ -56,9 +53,9 @@ namespace GameXO
         /// <summary>
         /// Проверка возможности выиграть следующим ходом
         /// </summary>
-        /// <param name="gameFieldButtons">Двумерный массив кнопок игрового поля</param>
+        /// <param name="gameField">Двумерный массив кнопок игрового поля</param>
         /// <param name="AIfigure">Фигура которой ходит компьютер</param>
-        private bool CheckWinNextMove(Button[,] gameFieldButtons, string AIFigure)
+        private bool CheckWinNextMove(string[,] gameField, string AIFigure)
         {
             // объявляем переменные для проверки статуса "линий" игрового поля
             string statusHor = "";
@@ -70,21 +67,21 @@ namespace GameXO
 
             for (int row = 0; row <= 2; row++)
             {
-                statusDiagUD += gameFieldButtons[row, row].Content.ToString();
+                statusDiagUD += gameField[row, row];
                 for (int column = 0; column <= 2; column++)
                 {
-                    statusHor += gameFieldButtons[row, column].Content.ToString(); // формируем состояние игрового поля по горизонтали
-                    statusVer += gameFieldButtons[column, row].Content.ToString(); // формируем состояние игрового поля по вертикали
-                    if ((row + column) == 2) statusDiagDU += gameFieldButtons[row, column].Content.ToString();
+                    statusHor += gameField[row, column]; // формируем состояние игрового поля по горизонтали
+                    statusVer += gameField[column, row]; // формируем состояние игрового поля по вертикали
+                    if ((row + column) == 2) statusDiagDU += gameField[row, column];
                 }
 
                 if (statusHor == statusCheckString) // проверяем есть ли две фигуры AIPlayer в ряду
                 {
                     // ставим третью фигуру в ряд
                     for (int col = 0; col <= 2; col++)
-                        if (gameFieldButtons[row, col].Content.ToString() == "")
+                        if (gameField[row, col] == "")
                         {
-                            gameFieldButtons[row, col].Content = AIFigure;
+                            gameField[row, col] = AIFigure;
                             return true;
                         }
                 }
@@ -93,9 +90,9 @@ namespace GameXO
                 {
                     // ставим третью фигуру в столбец
                     for (int col = 0; col <= 2; col++)
-                        if (gameFieldButtons[col, row].Content.ToString() == "")
+                        if (gameField[col, row] == "")
                         {
-                            gameFieldButtons[col, row].Content = AIFigure;
+                            gameField[col, row] = AIFigure;
                             return true;
                         }
                 }
@@ -108,9 +105,9 @@ namespace GameXO
             {
                 // ставим третью фигуру в диагональ UpDown
                 for (int i = 0; i <= 2; i++)
-                    if (gameFieldButtons[i, i].Content.ToString() == "")
+                    if (gameField[i, i] == "")
                     {
-                        gameFieldButtons[i, i].Content = AIFigure;
+                        gameField[i, i] = AIFigure;
                         return true;
                     }
             }
@@ -118,19 +115,19 @@ namespace GameXO
                 if (statusDiagDU == statusCheckString) // проверяем есть ли две фигуры AIPlayer в диагонали DownUp
             {
                 // ставим третью фигуру в диагональ DownUp
-                if (gameFieldButtons[2, 0].Content.ToString() == "")
+                if (gameField[2, 0] == "")
                 {
-                    gameFieldButtons[2, 0].Content = AIFigure;
+                    gameField[2, 0] = AIFigure;
                     return true;
                 }
-                if (gameFieldButtons[1, 1].Content.ToString() == "")
+                if (gameField[1, 1] == "")
                 {
-                    gameFieldButtons[1, 1].Content = AIFigure;
+                    gameField[1, 1] = AIFigure;
                     return true;
                 }
-                if (gameFieldButtons[0, 2].Content.ToString() == "")
+                if (gameField[0, 2] == "")
                 {
-                    gameFieldButtons[0, 2].Content = AIFigure;
+                    gameField[0, 2] = AIFigure;
                     return true;
                 }
             }
@@ -140,9 +137,9 @@ namespace GameXO
         /// <summary>
         /// Проверка возможности проиграть следующим ходом
         /// </summary>
-        /// <param name="gameFieldButtons">Двумерный массив кнопок игрового поля</param>
+        /// <param name="gameField">Двумерный массив игрового поля</param>
         /// <param name="AIfigure">Фигура которой ходит компьютер</param>
-        private bool CheckLoseNextMove(Button[,] gameFieldButtons, string AIFigure)
+        private bool CheckLoseNextMove(string[,] gameField, string AIFigure)
         {
             // объявляем переменные для проверки статуса "линий" игрового поля
             string statusHor = "";
@@ -157,21 +154,21 @@ namespace GameXO
 
             for (int row = 0; row <= 2; row++)
             {
-                statusDiagUD += gameFieldButtons[row, row].Content.ToString();
+                statusDiagUD += gameField[row, row];
                 for (int column = 0; column <= 2; column++)
                 {
-                    statusHor += gameFieldButtons[row, column].Content.ToString(); // формируем состояние игрового поля по горизонтали
-                    statusVer += gameFieldButtons[column, row].Content.ToString(); // формируем состояние игрового поля по вертикали
-                    if ((row + column) == 2) statusDiagDU += gameFieldButtons[row, column].Content.ToString();
+                    statusHor += gameField[row, column]; // формируем состояние игрового поля по горизонтали
+                    statusVer += gameField[column, row]; // формируем состояние игрового поля по вертикали
+                    if ((row + column) == 2) statusDiagDU += gameField[row, column];
                 }
 
                 if (statusHor == statusCheckString) // проверяем есть ли две фигуры ИГРОКА в ряду
                 {
                     // ставим фигуру AI в ряд
                     for (int col = 0; col <= 2; col++)
-                        if (gameFieldButtons[row, col].Content.ToString() == "")
+                        if (gameField[row, col] == "")
                         {
-                            gameFieldButtons[row, col].Content = AIFigure;
+                            gameField[row, col] = AIFigure;
                             return true;
                         }
                 }
@@ -180,9 +177,9 @@ namespace GameXO
                 {
                     // ставим фигуру AI в столбец
                     for (int col = 0; col <= 2; col++)
-                        if (gameFieldButtons[col, row].Content.ToString() == "")
+                        if (gameField[col, row] == "")
                         {
-                            gameFieldButtons[col, row].Content = AIFigure;
+                            gameField[col, row] = AIFigure;
                             return true;
                         }
                 }
@@ -195,9 +192,9 @@ namespace GameXO
             {
                 // ставим третью фигуру в ряд
                 for (int i = 0; i <= 2; i++)
-                    if (gameFieldButtons[i, i].Content.ToString() == "")
+                    if (gameField[i, i] == "")
                     {
-                        gameFieldButtons[i, i].Content = AIFigure;
+                        gameField[i, i] = AIFigure;
                         return true;
                     }
             }
@@ -205,19 +202,19 @@ namespace GameXO
                 if (statusDiagDU == statusCheckString) // проверяем есть ли две фигуры ИГРОКА в диагонали DownUp
             {
                 // ставим третью фигуру в диагональ DownUp
-                if (gameFieldButtons[2, 0].Content.ToString() == "")
+                if (gameField[2, 0] == "")
                 {
-                    gameFieldButtons[2, 0].Content = AIFigure;
+                    gameField[2, 0] = AIFigure;
                     return true;
                 }
-                if (gameFieldButtons[1, 1].Content.ToString() == "")
+                if (gameField[1, 1] == "")
                 {
-                    gameFieldButtons[1, 1].Content = AIFigure;
+                    gameField[1, 1] = AIFigure;
                     return true;
                 }
-                if (gameFieldButtons[0, 2].Content.ToString() == "")
+                if (gameField[0, 2] == "")
                 {
-                    gameFieldButtons[0, 2].Content = AIFigure;
+                    gameField[0, 2] = AIFigure;
                     return true;
                 }
             }
