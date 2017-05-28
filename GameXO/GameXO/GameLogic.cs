@@ -51,7 +51,7 @@ namespace GameXO
         /// </summary>
         private void View_ShowStat(object sender, EventArgs e)
         {
-            _view.GameStatistic = _statManager.GetStat("stat.JSON");
+            _view.GameStatistic = _statManager.GetStat("C:\\temp\\stat.JSON");
         }
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace GameXO
                 }
                 if (CheckResultString(resHor) || CheckResultString(resVer) || CheckResultString(resDiagUD) || CheckResultString(resDiagDU))
                 {
-                    WriteStat("stat.JSON");
+                    WriteStat("C:\\temp\\stat.JSON");
                     return true;
                 }
                 resVer = "";
@@ -167,7 +167,7 @@ namespace GameXO
             if (resField.Length == 9)
             {
                 gameStatus = "НИЧЬЯ!";
-                WriteStat("stat.JSON");
+                WriteStat("C:\\temp\\stat.JSON");
                 return true;
             }
             return false;

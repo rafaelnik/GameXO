@@ -13,7 +13,6 @@ namespace GameXO
     {
         private Button[,] gameFieldButtons;
         private int rowClicked, columnClicked;
-        private List<XOStat> gameStat;
 
         public GameWindow()
         {

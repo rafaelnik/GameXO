@@ -1,0 +1,35 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" type="text/css" href="~/Content/StyleSheetStat.css">
+    <title>Статистика игр крестики-нолики</title>
+</head>
+<body>
+    <div> 
+        <table>
+            <tr>
+                <th><p>Дата</p></th>
+                <th><p>Результат</p></th>
+                <th><p>Игрок играл крестиком</p></th>
+                <th><p>Количество ходов игрока</p></th>
+            </tr>
+            @foreach (var s in ViewBag.Stats)
+            {
+                <tr>
+                    <td><p>@s.GameData</p></td>
+                    <td><p>@s.GameResult</p></td>
+                    <td><p>@s.PlayerFigureX</p></td>
+                    <td><p>@s.CountMoves</p></td>
+                </tr>
+            }
+        </table>
+    </div>
+</body>
+</html>

@@ -5,7 +5,7 @@ using System.IO;
 
 namespace GameXO
 {
-    class JsonStatManager : IStatManager 
+    public class JsonStatManager : IStatManager 
     {
         /// <summary>
         /// Метод для записи статистики игры в JSON файл по директории path
