@@ -145,7 +145,7 @@ namespace GameXO
                 }
                 if (CheckResultString(resHor) || CheckResultString(resVer) || CheckResultString(resDiagUD) || CheckResultString(resDiagDU))
                 {
-                    WriteStat(new XmlStatManager(), "stat.xml");
+                    WriteStat(new JsonStatManager(), "stat.JSON");
                     return true;
                 }
                 resVer = "";
@@ -154,7 +154,7 @@ namespace GameXO
             if (resField.Length == 9)
             {
                 gameStatus = "НИЧЬЯ!";
-                WriteStat(new XmlStatManager(), "stat.xml");
+                WriteStat(new JsonStatManager(), "stat.JSON");
                 return true;
             }
             return false;
