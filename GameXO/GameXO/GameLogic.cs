@@ -17,15 +17,18 @@ namespace GameXO
         private AILogic _aiLogic;
         private bool aiPlayerOn;
         private int countPlayerMoves;
+        private IStatManager _statManager;
 
         public GameLogic(IView view)
         {
             _view = view;
             _aiLogic = new AILogic();
+            _statManager = new JsonStatManager();
 
             // Подписываемся на события GameWindow через интерфейс IView
             view.StartNewGame += View_StartNewGame;
             view.GameFieldClick += View_GameFieldClick;
+            view.ShowStat += View_ShowStat;
         }
 
         /// <summary>
@@ -44,6 +47,14 @@ namespace GameXO
         }
 
         /// <summary>
+        /// Событие по вызову статистики пользователем
+        /// </summary>
+        private void View_ShowStat(object sender, EventArgs e)
+        {
+            _view.GameStatistic = _statManager.GetStat("stat.JSON");
+        }
+
+        /// <summary>
         /// Событие по нажатию кнопки "Новая игра"
         /// </summary>
         private void View_StartNewGame(object sender, EventArgs e)
@@ -52,6 +63,9 @@ namespace GameXO
             SetGameFieldEmpty(); // очищаем игровое поле
             aiPlayerOn = _view.AIPlayerOn; // проверяем выбрана ли игра с компьютером
             countPlayerMoves = 0; // обнуляем счетчик ходов пользователя
+
+            gameStatus = ""; // обнуляем статус игры
+            _view.SetGameStatus("");
 
             // выставляем фигуры игроку и компьютеру
             if (_view.PlayerFigureX)
@@ -76,11 +90,10 @@ namespace GameXO
         }
 
 
-        
         private void NextMove()
         {
             string[,] field = _view.GameFieldMatrix;
-            if (field [_view.RowClicked, _view.ColumnClicked] == "")
+            if (field[_view.RowClicked, _view.ColumnClicked] == "")
             {
                 field[_view.RowClicked, _view.ColumnClicked] = playerFigure;
                 countPlayerMoves++;
@@ -110,7 +123,7 @@ namespace GameXO
         /// </summary>
         private void SetGameFieldEmpty()
         {
-            string [,] field = _view.GameFieldMatrix;
+            string[,] field = _view.GameFieldMatrix;
             for (int row = 0; row <= 2; row++)
             {
                 for (int col = 0; col <= 2; col++)
@@ -145,7 +158,7 @@ namespace GameXO
                 }
                 if (CheckResultString(resHor) || CheckResultString(resVer) || CheckResultString(resDiagUD) || CheckResultString(resDiagDU))
                 {
-                    WriteStat(new JsonStatManager(), "stat.JSON");
+                    WriteStat("stat.JSON");
                     return true;
                 }
                 resVer = "";
@@ -154,11 +167,30 @@ namespace GameXO
             if (resField.Length == 9)
             {
                 gameStatus = "НИЧЬЯ!";
-                WriteStat(new JsonStatManager(), "stat.JSON");
+                WriteStat("stat.JSON");
                 return true;
             }
             return false;
         }
+
+        /// <summary>
+        /// Проверка на выигрыш пользователем
+        /// </summary>
+        /// <returns></returns>
+        private GameResult PlayerWinCheck()
+        {
+            if (aiPlayerOn)
+            {
+                if (((gameStatus == "ИГРОК Х ВЫИГРАЛ!") && _view.PlayerFigureX) || ((gameStatus == "ИГРОК O ВЫИГРАЛ!") && !(_view.PlayerFigureX))) return GameResult.PlayerWin;
+                else if (((gameStatus == "ИГРОК O ВЫИГРАЛ!") && _view.PlayerFigureX) || ((gameStatus == "ИГРОК X ВЫИГРАЛ!") && !(_view.PlayerFigureX))) return GameResult.PlayerLose;
+                else if (gameStatus == "НИЧЬЯ!") return GameResult.Draw;
+            }
+            else if (gameStatus == "ИГРОК Х ВЫИГРАЛ!") return GameResult.PlayerXWin;
+            else if (gameStatus == "ИГРОК O ВЫИГРАЛ!") return GameResult.PlayerOWin;
+
+            return GameResult.Draw;
+        }
+
 
         /// <summary>
         /// Проверка строки на состояние выигрыша одного из игроков
@@ -179,21 +211,28 @@ namespace GameXO
             return false;
         }
 
-        private void WriteStat(IStatManager statManager, string path)
+
+        /// <summary>
+        /// Метод сохраняет результат игры
+        /// </summary>
+        /// <param name="path"></param>
+        private void WriteStat(string path)
         {
             var stat = new List<XOStat>();
 
-            if (File.Exists(path)) stat = statManager.GetStat(path);
+            if (File.Exists(path)) stat = _statManager.GetStat(path);
+
+            if (stat == null) stat = new List<XOStat>();
 
             stat.Add(new XOStat()
             {
                 GameData = System.DateTime.Now,
-                GameResult = gameStatus,
-                PlayerFigure = _view.PlayerFigureX,
+                GameResult = PlayerWinCheck(),
+                PlayerFigureX = _view.PlayerFigureX,
                 CountMoves = countPlayerMoves
             });
 
-            statManager.SetStat(path, stat);
+            _statManager.SetStat(path, stat);
         }
     }
 }

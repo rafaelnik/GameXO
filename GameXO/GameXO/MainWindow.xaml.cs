@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -12,6 +13,7 @@ namespace GameXO
     {
         private Button[,] gameFieldButtons;
         private int rowClicked, columnClicked;
+        private List<XOStat> gameStat;
 
         public GameWindow()
         {
@@ -21,6 +23,7 @@ namespace GameXO
 
         public event EventHandler StartNewGame;
         public event EventHandler GameFieldClick;
+        public event EventHandler ShowStat;
 
         /// <summary>
         /// Состояние опции "игры с компьютером"
@@ -55,6 +58,16 @@ namespace GameXO
             {
                 if (chBoxPlayerMoveFirst.IsChecked == true) return true;
                 return false;
+            }
+        }
+
+        public List<XOStat> GameStatistic
+        {
+            set
+            {
+                var statWindow = new StatWindow();
+                statWindow.dataGridStat.ItemsSource = value;
+                statWindow.Show();
             }
         }
 
@@ -146,6 +159,14 @@ namespace GameXO
         private void buttonNewGame_Click(object sender, RoutedEventArgs e)
         {
             if (StartNewGame != null) StartNewGame(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Событие по запросу статистики пользователем
+        /// </summary>
+        private void buttonStatistic_Click(object sender, RoutedEventArgs e)
+        {
+            if (ShowStat != null) ShowStat(this, EventArgs.Empty);
         }
 
         /// <summary>

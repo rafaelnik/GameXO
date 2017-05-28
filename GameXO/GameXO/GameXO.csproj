@@ -59,7 +59,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="GameResult.cs" />
     <Compile Include="JsonStatManager.cs" />
+    <Compile Include="StatWindow.xaml.cs">
+      <DependentUpon>StatWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="XmlStatManager.cs" />
     <Compile Include="XOStat.cs" />
     <Page Include="MainWindow.xaml">
@@ -78,6 +82,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="StatWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

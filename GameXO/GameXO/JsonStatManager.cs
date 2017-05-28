@@ -23,7 +23,7 @@ namespace GameXO
         /// <summary>
         /// Метод возвращающий статистику из JSON файла
         /// </summary>
-        /// <param name="path"></param>
+        /// <param name="path">Путь к файлу для чтения статистики</param>
         /// <returns></returns>
         public List<XOStat> GetStat(string path)
         {

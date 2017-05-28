@@ -44,7 +44,8 @@
             <CheckBox x:Name="chBoxPlayerMoveFirst" Grid.Row="1" IsChecked="True" Margin="20,32,10,21" IsEnabled="False" Content="Игрок ходит первый"/>
             <CheckBox x:Name="chBoxPlayerFigureX" Grid.Row="1" IsChecked="True" Margin="20,52,10,0" IsEnabled="False" Content="Фигура игрока - Х"/>
             <Button x:Name="buttonNewGame" Grid.Row="0" Height="25" Width="150" FontWeight="Normal" Content="НОВАЯ ИГРА" VerticalAlignment="Top" Margin="10" Click="buttonNewGame_Click"></Button>
-            <TextBox x:Name="textBoxGameStatus" Grid.Row="2" TextAlignment="Center" Width="150" Height="25"></TextBox>
+            <TextBox x:Name="textBoxGameStatus" Grid.Row="2" TextAlignment="Center" Width="150" Height="25" Margin="0,0,0,30"/>
+            <Button x:Name="buttonStatistic" Grid.Row="2" Height="25" Width="150" Content="Статистика" Margin="0,30,0,0" Click="buttonStatistic_Click"/>
         </Grid>
 
     </Grid>

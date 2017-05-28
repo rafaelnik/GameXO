@@ -6,18 +6,18 @@ namespace GameXO
     public class XOStat
     {
         public DateTime GameData { get; set; }
-        public String GameResult { get; set; }
-        public bool PlayerFigure { get; set; }
+        public GameResult GameResult { get; set; }
+        public bool PlayerFigureX { get; set; }
         public int CountMoves { get; set; }
 
         public XOStat()
         { }
 
-        public XOStat(DateTime data, string result, bool playerFigure, int countMoves)
+        public XOStat(DateTime data, GameResult result, bool playerFigure, int countMoves)
         {
             GameData = data;
             GameResult = result;
-            PlayerFigure = playerFigure;
+            PlayerFigureX = playerFigure;
             CountMoves = countMoves;
         }
     }
