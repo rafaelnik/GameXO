@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Collections.Generic;
 
 namespace GameXO
 {
@@ -14,6 +16,7 @@ namespace GameXO
         private readonly IView _view;
         private AILogic _aiLogic;
         private bool aiPlayerOn;
+        private int countPlayerMoves;
 
         public GameLogic(IView view)
         {
@@ -48,6 +51,7 @@ namespace GameXO
             _view.SetFieldEnable(true); // делаем достыпным игровое поле
             SetGameFieldEmpty(); // очищаем игровое поле
             aiPlayerOn = _view.AIPlayerOn; // проверяем выбрана ли игра с компьютером
+            countPlayerMoves = 0; // обнуляем счетчик ходов пользователя
 
             // выставляем фигуры игроку и компьютеру
             if (_view.PlayerFigureX)
@@ -79,6 +83,8 @@ namespace GameXO
             if (field [_view.RowClicked, _view.ColumnClicked] == "")
             {
                 field[_view.RowClicked, _view.ColumnClicked] = playerFigure;
+                countPlayerMoves++;
+
                 if (CheckResult(field))
                 {
                     _view.SetGameStatus(gameStatus);
@@ -139,6 +145,7 @@ namespace GameXO
                 }
                 if (CheckResultString(resHor) || CheckResultString(resVer) || CheckResultString(resDiagUD) || CheckResultString(resDiagDU))
                 {
+                    WriteStat(new XmlStatManager(), "stat.xml");
                     return true;
                 }
                 resVer = "";
@@ -147,6 +154,7 @@ namespace GameXO
             if (resField.Length == 9)
             {
                 gameStatus = "НИЧЬЯ!";
+                WriteStat(new XmlStatManager(), "stat.xml");
                 return true;
             }
             return false;
@@ -169,6 +177,23 @@ namespace GameXO
                     return true;
             }
             return false;
+        }
+
+        private void WriteStat(IStatManager statManager, string path)
+        {
+            var stat = new List<XOStat>();
+
+            if (File.Exists(path)) stat = statManager.GetStat(path);
+
+            stat.Add(new XOStat()
+            {
+                GameData = System.DateTime.Now,
+                GameResult = gameStatus,
+                PlayerFigure = _view.PlayerFigureX,
+                CountMoves = countPlayerMoves
+            });
+
+            statManager.SetStat(path, stat);
         }
     }
 }
