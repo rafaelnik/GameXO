@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:GameXO"
         mc:Ignorable="d"
         Title="Окно статистики" Height="300" Width="400" ResizeMode="NoResize">
-    <Grid>
-        <DataGrid x:Name="dataGridStat" IsReadOnly="True"/>
+    <Grid x:Name="StatGrid" >
+        <DataGrid x:Name="dataGridStat" IsReadOnly="True" Width="390" Height="230" VerticalAlignment="Top"/>
+        <TextBlock x:Name="textBoxWinRate" Width="390" Height="27" VerticalAlignment="Bottom" TextAlignment="Center" FontSize="20" FontWeight="Bold" />
     </Grid>
 </Window>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System.Linq;
 
 
 namespace GameXO
@@ -66,6 +67,10 @@ namespace GameXO
             {
                 var statWindow = new StatWindow();
                 statWindow.dataGridStat.ItemsSource = value;
+                int wins = value.Where(p => p.GameResult == GameResult.PlayerWin).Count();
+                int loses = value.Where(p => p.GameResult == GameResult.PlayerLose).Count();
+                int res = (wins * 100) / (wins + loses);
+                statWindow.textBoxWinRate.Text = "У игрока " + res + "% побед!";
                 statWindow.Show();
             }
         }
