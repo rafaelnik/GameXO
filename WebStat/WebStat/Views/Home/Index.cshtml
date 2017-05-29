@@ -15,17 +15,50 @@
     <div> 
         <table>
             <tr>
-                <th><p>Дата</p></th>
+                <th><p>Дата и время игры</p></th>
                 <th><p>Результат</p></th>
-                <th><p>Игрок играл крестиком</p></th>
+                <th><p>Фигура игрока</p></th>
                 <th><p>Количество ходов игрока</p></th>
             </tr>
             @foreach (var s in ViewBag.Stats)
             {
                 <tr>
                     <td><p>@s.GameData</p></td>
-                    <td><p>@s.GameResult</p></td>
-                    <td><p>@s.PlayerFigureX</p></td>
+                    <td>
+                        <p>
+                            @switch ((int)s.GameResult)
+                            {
+                                case 0:
+                                    @:Победа игрока
+                                    break;
+                                case 1:
+                                    @:Проигрыш игрока
+                                    break;
+                                case 4:
+                                    @:Ничья
+                                    break;
+                                case 2:
+                                    @:Игрок X выиграл
+                                    break;
+                                case 3:
+                                    @:Игрок O выиграл
+                                    break;
+                            }
+                        </p>
+                    </td>
+                    <td>
+                        <p>
+                            @switch ((bool)s.PlayerFigureX)
+                            {
+                                case true:
+                                @:Крестик
+                                break;
+                                case false:
+                                @:Нолик
+                                break;
+                            }
+                        </p>
+                    </td>
                     <td><p>@s.CountMoves</p></td>
                 </tr>
             }

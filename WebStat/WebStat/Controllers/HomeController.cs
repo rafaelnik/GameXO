@@ -8,7 +8,7 @@ namespace WebStat.Controllers
     public class HomeController : Controller
     {
         
-        // GET: Statistic
+        // GET: 
         public ActionResult Index()
         {
             var stat = new WebStatistics();
@@ -16,6 +16,7 @@ namespace WebStat.Controllers
             int wins = stat.Statistics.Where(p => p.GameResult == GameResult.PlayerWin).Count();
             int loses = stat.Statistics.Where(p => p.GameResult == GameResult.PlayerLose).Count();
             ViewBag.WinRate = "У игрока " + (wins * 100) / (wins + loses) + "% побед!"; 
+
             return View();
         }
     }
