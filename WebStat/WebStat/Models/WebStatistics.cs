@@ -1,7 +1,5 @@
 ﻿using GameXO;
-using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace WebStat.Models
 {
@@ -12,10 +10,12 @@ namespace WebStat.Models
 
         public WebStatistics()
         {
-            var statManager = new JsonStatManager();
-            if (File.Exists("c://temp//stat.JSON")) Statistics = statManager.GetStat("c://temp//stat.JSON");
+            using (var db = new XOStatContext())
+            {
+                Statistics = new List<XOStat>();
+
+                foreach (XOStat st in db.Statistics) Statistics.Add(st);
+            }
         }
-
-
     }
 }

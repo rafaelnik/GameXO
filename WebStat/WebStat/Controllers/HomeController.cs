@@ -15,7 +15,10 @@ namespace WebStat.Controllers
             ViewBag.Stats = stat.Statistics;
             int wins = stat.Statistics.Where(p => p.GameResult == GameResult.PlayerWin).Count();
             int loses = stat.Statistics.Where(p => p.GameResult == GameResult.PlayerLose).Count();
-            ViewBag.WinRate = "У игрока " + (wins * 100) / (wins + loses) + "% побед!"; 
+
+            if ((wins + loses) > 0) ViewBag.WinRate = "У игрока " + (wins * 100) / (wins + loses) + "% побед!";
+            else ViewBag.WinRate = "Недостаточно игр с компьютером для подсчета статистики!";
+
 
             return View();
         }

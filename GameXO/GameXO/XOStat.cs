@@ -1,10 +1,15 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 
 namespace GameXO
 {
     [Serializable]
+    [Table("GameStatistics")]
     public class XOStat
     {
+        [Key]
         public DateTime GameData { get; set; }
         public GameResult GameResult { get; set; }
         public bool PlayerFigureX { get; set; }

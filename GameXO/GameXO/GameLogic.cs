@@ -17,13 +17,13 @@ namespace GameXO
         private AILogic _aiLogic;
         private bool aiPlayerOn;
         private int countPlayerMoves;
-        private IStatManager _statManager;
+        private readonly IStatManager _statManager;
 
         public GameLogic(IView view)
         {
             _view = view;
             _aiLogic = new AILogic();
-            _statManager = new JsonStatManager();
+            _statManager = new DBStatManager();
 
             // Подписываемся на события GameWindow через интерфейс IView
             view.StartNewGame += View_StartNewGame;
@@ -220,9 +220,9 @@ namespace GameXO
         {
             var stat = new List<XOStat>();
 
-            if (File.Exists(path)) stat = _statManager.GetStat(path);
+            //if (File.Exists(path)) stat = _statManager.GetStat(path);
 
-            if (stat == null) stat = new List<XOStat>();
+            //if (stat == null) stat = new List<XOStat>();
 
             stat.Add(new XOStat()
             {
