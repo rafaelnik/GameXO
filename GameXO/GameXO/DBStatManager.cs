@@ -5,6 +5,15 @@ namespace GameXO
 {
     public class DBStatManager : IStatManager
     {
+
+        /// <summary>
+        /// Метод для записи статистики игры в БД
+        /// </summary>
+        public void SetStat(List<XOStat> stat)
+        {
+            SetStat("", stat);
+        }
+
         /// <summary>
         /// Метод для записи статистики игры в БД
         /// </summary>
@@ -23,6 +32,15 @@ namespace GameXO
         /// <summary>
         /// Метод возвращающий статистику из БД
         /// </summary>
+        /// <returns></returns>
+        public List<XOStat> GetStat()
+        {
+            return GetStat("");
+        }
+
+        /// <summary>
+        /// Метод возвращающий статистику из БД
+        /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
         public List<XOStat> GetStat(string path)
@@ -35,6 +53,11 @@ namespace GameXO
             }
 
             return statistics;
+        }
+
+        public void ClearStat()
+        {
+            ClearStat("");
         }
 
         public void ClearStat(string path)
